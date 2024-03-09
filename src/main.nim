@@ -55,8 +55,8 @@ proc main(dll, output, special_add: string) =
     let file = open(output,fmAppend)
     for i in 0..numNames - 1:
         var name = cast[LPCSTR](pe + names[i])
-        var function = cast[PVOID](pe + functions[i])
         var ordinal = cast[DWORD](ordinals[i])
+        var function = cast[PVOID](pe + ordinal)
         echo(fmt"[*] Proxying [{$name}] -> {function.hex} {{{ordinal}}}")
         let valid_path = dll.replace(".dll","").replace(r"\",r"\\")
         file.write($"""#pragma comment(linker , "/export:""" & $name & "=" & valid_path & special_add & "." & $name & """")""" & "\n")
